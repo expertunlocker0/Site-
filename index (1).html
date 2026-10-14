@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>টুল ভান্ডার — যন্ত্রপাতির অর্ডার ও অ্যাডমিন প্যানেল</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e9edf0;
+  --surface:#ffffff;
+  --surface-2:#f5f8f9;
+  --ink:#131f28;
+  --ink-2:#22384a;
+  --muted:#4f6272;
+  --line:rgba(19,31,40,.13);
+  --line-strong:rgba(19,31,40,.24);
+  --steel:#22384a;
+  --accent:#d9600b;
+  --accent-ink:#8a3c04;
+  --accent-soft:rgba(217,96,11,.13);
+  --ok:#116149;
+  --ok-soft:rgba(17,97,73,.12);
+  --warn:#8a5a05;
+  --warn-soft:rgba(196,138,20,.16);
+  --danger:#96231c;
+  --danger-soft:rgba(150,35,28,.12);
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow-1:0 1px 2px rgba(12,24,33,.06), 0 8px 20px -16px rgba(12,24,33,.4);
+  --shadow-2:0 2px 6px rgba(12,24,33,.08), 0 22px 44px -26px rgba(12,24,33,.5);
+  --step--1:clamp(.8rem,.78rem + .15vw,.88rem);
+  --step-0:clamp(.96rem,.93rem + .25vw,1.06rem);
+  --step-1:clamp(1.15rem,1.05rem + .5vw,1.42rem);
+  --step-2:clamp(1.5rem,1.28rem + 1.1vw,2.15rem);
+  --step-3:clamp(2.1rem,1.55rem + 2.6vw,3.5rem);
+  --space:clamp(1rem,.85rem + .9vw,1.6rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:"Hind Siliguri","Noto Sans Bengali","Hiragino Sans","Yu Gothic",sans-serif;
+  font-size:var(--step-0);
+  line-height:1.78;
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(19,31,40,.042) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(19,31,40,.042) 1px,transparent 1px);
+  background-size:100% 46px,46px 100%;
+}
+h1,h2,h3,h4{font-family:"Anek Bangla","Hind Siliguri",sans-serif;margin:0;line-height:1.24;letter-spacing:-.012em}
+h1{font-size:var(--step-3);font-weight:800}
+h2{font-size:var(--step-2);font-weight:700}
+h3{font-size:var(--step-1);font-weight:700}
+h4{font-size:var(--step-0);font-weight:700}
+p{margin:0 0 .75em}
+img{max-width:100%;display:block}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px}
+.wrap{width:min(1180px,100% - 2.2rem);margin-inline:auto}
+.hazard{height:7px;background:repeating-linear-gradient(45deg,var(--accent) 0 11px,var(--ink-2) 11px 22px)}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(233,237,240,.92);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+.topbar-in{display:flex;align-items:center;gap:.9rem;padding:.7rem 0}
+.brand{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:var(--ink)}
+.mark{width:38px;height:38px;border-radius:9px;background:var(--steel);color:#fff;display:grid;place-items:center;font-family:"Anek Bangla",sans-serif;font-weight:800;font-size:1.15rem;box-shadow:var(--shadow-1);flex:none}
+.brand-name{font-family:"Anek Bangla",sans-serif;font-weight:800;font-size:var(--step-1);letter-spacing:-.02em;line-height:1.1}
+.brand-sub{font-size:var(--step--1);color:var(--muted);line-height:1.2}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}
+.btn{
+  font:inherit;font-weight:600;cursor:pointer;border:1px solid transparent;
+  padding:.5rem .9rem;border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);
+  box-shadow:var(--shadow-1);transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  display:inline-flex;align-items:center;gap:.4rem;line-height:1.3;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--steel);color:#fff}
+.btn-accent{background:var(--accent);color:#1a1205;border-color:rgba(0,0,0,.15)}
+.btn-ghost{background:transparent;border-color:var(--line-strong);box-shadow:none}
+.btn-ghost:hover{background:var(--surface)}
+.btn-danger{background:var(--danger-soft);color:var(--danger);border-color:rgba(150,35,28,.3);box-shadow:none}
+.btn-sm{padding:.3rem .6rem;font-size:var(--step--1)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.chip{display:inline-flex;align-items:center;gap:.35rem;font-size:var(--step--1);font-weight:600;padding:.15rem .5rem;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.pn{font-family:"Anek Bangla",sans-serif;font-weight:700;font-size:var(--step--1);letter-spacing:.06em;background:var(--accent-soft);color:var(--accent-ink);padding:.1rem .45rem;border-radius:5px}
+section{padding:calc(var(--space) * 1.9) 0}
+.station{position:relative;padding-left:1.15rem;margin-bottom:calc(var(--space) * .8)}
+.station::before{content:"";position:absolute;left:0;top:.35rem;bottom:.2rem;width:5px;background:repeating-linear-gradient(to bottom,var(--ink-2) 0 2px,transparent 2px 9px);opacity:.35}
+.station-no{display:block;font-family:"Anek Bangla",sans-serif;font-size:var(--step--1);font-weight:700;letter-spacing:.14em;color:var(--accent-ink);text-transform:uppercase}
+.lede{color:var(--muted);max-width:62ch}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:calc(var(--space) * 1.4);align-items:end}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.hero h1{margin:.2rem 0 .6rem}
+.hero h1 em{font-style:normal;color:var(--accent-ink)}
+.hero-side{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1);padding:var(--space)}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;text-align:center}
+.stat b{display:block;font-family:"Anek Bangla",sans-serif;font-size:var(--step-1);font-weight:800;line-height:1.1}
+.stat span{font-size:var(--step--1);color:var(--muted)}
+.note{font-size:var(--step--1);color:var(--muted)}
+.banner{display:flex;gap:.7rem;align-items:flex-start;border:1px dashed var(--line-strong);border-left:5px solid var(--accent);background:var(--surface);border-radius:var(--radius-sm);padding:.7rem .9rem;font-size:var(--step--1);color:var(--muted)}
+.banner b{color:var(--ink)}
+.toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:var(--space)}
+input,select,textarea{
+  font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);
+  border-radius:var(--radius-sm);padding:.5rem .65rem;width:100%;
+}
+input[type=color]{padding:.15rem;height:2.6rem;cursor:pointer}
+label{display:block;font-size:var(--step--1);font-weight:600;color:var(--ink-2);margin-bottom:.25rem}
+.field{margin-bottom:.8rem}
+.toolbar input[type=search]{max-width:22rem}
+.toolbar select{max-width:14rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:var(--space)}
+.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-1);overflow:hidden;display:flex;flex-direction:column;transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-2)}
+.thumb{position:relative;aspect-ratio:4/3;background:
+  linear-gradient(135deg,rgba(34,56,74,.9),rgba(34,56,74,.62)),
+  repeating-linear-gradient(45deg,rgba(217,96,11,.5) 0 9px,rgba(19,31,40,.35) 9px 18px);
+  display:grid;place-items:center;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .glyph{font-family:"Anek Bangla",sans-serif;font-size:clamp(2.4rem,7vw,3.4rem);font-weight:800;color:rgba(255,255,255,.92);text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.thumb .pn{position:absolute;top:.55rem;left:.55rem;background:rgba(255,255,255,.92)}
+.thumb .soldout{position:absolute;inset:auto 0 0 0;background:var(--danger);color:#fff;font-size:var(--step--1);font-weight:700;text-align:center;padding:.2rem}
+.card-body{padding:.85rem .9rem 1rem;display:flex;flex-direction:column;gap:.45rem;flex:1}
+.pname{font-size:var(--step-1);font-weight:700}
+.pmeta{font-size:var(--step--1);color:var(--muted);margin:0}
+.prow{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-top:auto}
+.price{font-family:"Anek Bangla",sans-serif;font-weight:800;font-size:var(--step-1);color:var(--accent-ink)}
+.stock{font-size:var(--step--1);color:var(--muted)}
+.stock.low{color:var(--warn);font-weight:700}
+.pdesc{font-size:var(--step--1);color:var(--muted);margin:0}
+.empty{border:1px dashed var(--line-strong);border-radius:var(--radius);padding:2rem;text-align:center;color:var(--muted);background:var(--surface)}
+.drawer-overlay{position:fixed;inset:0;background:rgba(12,24,33,.45);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:60}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--bg);z-index:61;box-shadow:var(--shadow-2);transform:translateX(102%);transition:transform .26s ease;display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.drawer.open{transform:none}
+.drawer-head{padding:.9rem 1rem;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:.6rem;background:var(--surface)}
+.drawer-head h3{margin:0}
+.drawer-body{overflow:auto;padding:1rem;flex:1}
+.drawer-foot{border-top:1px solid var(--line);padding:1rem;background:var(--surface)}
+.line-item{display:flex;gap:.7rem;align-items:flex-start;border-bottom:1px solid var(--line);padding:.6rem 0}
+.line-item .li-name{font-weight:600}
+.qty{display:flex;align-items:center;gap:.35rem;margin-top:.3rem}
+.qty button{width:1.9rem;height:1.9rem;border-radius:6px;border:1px solid var(--line-strong);background:var(--surface);font:inherit;cursor:pointer;line-height:1}
+.qty b{min-width:1.6rem;text-align:center}
+.totals{display:flex;justify-content:space-between;font-weight:700;margin-bottom:.7rem;font-size:var(--step-1)}
+.tabs{display:flex;gap:.3rem;border-bottom:1px solid var(--line-strong);margin-bottom:var(--space);flex-wrap:wrap}
+.tab{font:inherit;font-weight:600;background:transparent;border:0;border-bottom:3px solid transparent;padding:.5rem .8rem;cursor:pointer;color:var(--muted);border-radius:0}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-1);padding:var(--space)}
+.panel + .panel{margin-top:var(--space)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:var(--step--1);min-width:720px}
+th,td{text-align:left;padding:.55rem .65rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-family:"Anek Bangla",sans-serif;font-weight:700;letter-spacing:.02em;color:var(--ink-2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+.pill{display:inline-block;font-size:var(--step--1);font-weight:700;padding:.1rem .5rem;border-radius:999px;white-space:nowrap}
+.st-pending{background:var(--warn-soft);color:var(--warn)}
+.st-confirmed{background:rgba(34,56,74,.12);color:var(--ink-2)}
+.st-packed{background:rgba(94,72,160,.14);color:#463577}
+.st-shipped{background:var(--accent-soft);color:var(--accent-ink)}
+.st-delivered{background:var(--ok-soft);color:var(--ok)}
+.st-cancelled{background:var(--danger-soft);color:var(--danger)}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0 var(--space)}
+details{border:1px solid var(--line);border-radius:var(--radius-sm);padding:.6rem .8rem;background:var(--surface-2);margin-top:.6rem}
+summary{cursor:pointer;font-weight:700;font-family:"Anek Bangla",sans-serif}
+ol.steps{padding-left:1.3rem;margin:.5rem 0}
+ol.steps li{margin-bottom:.4rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:.05rem .3rem;font-size:.9em}
+.toast-stack{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:.5rem;align-items:center;width:min(420px,92vw)}
+.toast{background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:.6rem .9rem;box-shadow:var(--shadow-2);font-size:var(--step--1);width:100%;text-align:center}
+.toast.ok{background:var(--ok)}
+.toast.err{background:var(--danger)}
+footer{border-top:1px solid var(--line);margin-top:calc(var(--space) * 2);padding:var(--space) 0 2rem;color:var(--muted);font-size:var(--step--1)}
+.foot-in{display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between}
+[hidden]{display:none !important}
+.track-box{display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap}
+.track-box .field{margin:0;min-width:12rem;flex:1}
+@media (prefers-reduced-motion:no-preference){
+  .reveal{opacity:0;transform:translateY(14px);animation:rise .55s ease forwards}
+  .reveal:nth-child(2){animation-delay:.06s}
+  .reveal:nth-child(3){animation-delay:.12s}
+  .reveal:nth-child(4){animation-delay:.18s}
+  @keyframes rise{to{opacity:1;transform:none}}
+}
+@media print{
+  body{background:#fff;background-image:none}
+  .no-print,.top-actions,.drawer,.drawer-overlay{display:none !important}
+  .panel{box-shadow:none;border-color:#999}
+  table{min-width:0}
+}
+@page{size:A4;margin:16mm}
+</style>
+</head>
+<body>
+<div class="hazard"></div>
+
+<header class="topbar no-print">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#" id="brandLink">
+      <span class="mark" id="brandMark">ট</span>
+      <span>
+        <span class="brand-name" id="brandName">টুল ভান্ডার</span>
+        <span class="brand-sub" id="brandTag">যন্ত্রপাতি, সোজা দামে</span>
+      </span>
+    </a>
+    <div class="top-actions">
+      <button class="btn btn-ghost" id="btnTrack">অর্ডার ট্র্যাক</button>
+      <button class="btn" id="btnCart">কার্ট <span class="chip" id="cartCount">০</span></button>
+      <button class="btn btn-primary" id="btnAdmin">অ্যাডমিন</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="view-shop">
+    <div class="hero">
+      <div class="reveal">
+        <span class="station-no">ST-01 · দোকান</span>
+        <h1 id="heroTitle">যে যন্ত্রটা দরকার, <em>সেটাই</em> পাবেন এখানে</h1>
+        <p class="lede" id="heroSub">হাতিয়ার, পাওয়ার টুল আর মাপার যন্ত্র — দাম দেখে অর্ডার করুন, আমরা ফোনে কনফার্ম করে ডেলিভারি দেব।</p>
+      </div>
+      <aside class="hero-side reveal">
+        <div class="stat-grid">
+          <div class="stat"><b id="statProducts">০</b><span>প্রোডাক্ট</span></div>
+          <div class="stat"><b id="statOrders">০</b><span>মোট অর্ডার</span></div>
+          <div class="stat"><b id="statNew">০</b><span>নতুন অর্ডার</span></div>
+        </div>
+        <p class="note" style="margin:.8rem 0 0" id="modeNote">ডেটা সোর্স: ডেমো (এই ব্রাউজারে)</p>
+      </aside>
+    </div>
+
+    <div id="demoBanner" class="banner" style="margin-top:var(--space)">
+      <span>⚙️</span>
+      <div><b>এখন ডেমো মোড চলছে।</b> অর্ডার আর প্রোডাক্ট শুধু এই ব্রাউজারে জমা হচ্ছে। অ্যাডমিন → সেটিংস-এ Google Apps Script URL বসালেই সব ডেটা সোজা Google Sheet-এ যাবে।</div>
+    </div>
+
+    <div id="trackPanel" hidden style="margin-top:var(--space)">
+      <div class="panel">
+        <h3>অর্ডার ট্র্যাক করুন</h3>
+        <p class="note">অর্ডার করার সময় যে আইডি পেয়েছেন সেটা লিখুন (যেমন ORD-20250101-0001)।</p>
+        <div class="track-box">
+          <div class="field"><label for="trackId">অর্ডার আইডি</label><input id="trackId" placeholder="ORD-20250101-0001"></div>
+          <button class="btn btn-primary" id="btnTrackGo">দেখুন</button>
+        </div>
+        <div id="trackResult" style="margin-top:.8rem"></div>
+      </div>
+    </div>
+
+    <div class="toolbar" style="margin-top:calc(var(--space) * 1.4)">
+      <input type="search" id="searchBox" placeholder="প্রোডাক্ট খুঁজুন…" aria-label="প্রোডাক্ট খুঁজুন">
+      <select id="catFilter" aria-label="ক্যাটাগরি">
+        <option value="all">সব ক্যাটাগরি</option>
+      </select>
+      <button class="btn btn-ghost" id="btnRefresh">রিফ্রেশ</button>
+    </div>
+
+    <div class="grid" id="productGrid"></div>
+    <div class="empty" id="noProducts" hidden>এখন কোনো প্রোডাক্ট নেই। অ্যাডমিন প্যানেল থেকে যোগ করুন।</div>
+  </section>
+
+  <section id="view-admin" hidden>
+    <div class="station">
+      <span class="station-no">ST-02 · কন্ট্রোল রুম</span>
+      <h2>অ্যাডমিন প্যানেল</h2>
+      <p class="lede">অর্ডার রিসিভ করুন, স্ট্যাটাস বদলান, নতুন প্রোডাক্ট যোগ করুন আর পুরো সাইট নিজের মতো সাজান।</p>
+    </div>
+
+    <div id="loginGate" class="panel" style="max-width:26rem">
+      <h3>লগইন</h3>
+      <p class="note">পাসওয়ার্ড দিন (ডিফল্ট: <code>admin123</code>)। সেটিংস থেকে বদলে নিন।</p>
+      <div class="field"><label for="adminPass">পাসওয়ার্ড</label><input type="password" id="adminPass" autocomplete="current-password"></div>
+      <button class="btn btn-primary" id="btnLogin">প্রবেশ করুন</button>
+      <p class="note" style="margin-top:.7rem">এটা সাইটের ভেতরের হালকা গেট। আসল সুরক্ষা Apps Script-এর <code>ADMIN_KEY</code> থেকে আসে — যেটা ছাড়া শিটে কোনো পরিবর্তন যাবে না।</p>
+    </div>
+
+    <div id="adminPanel" hidden>
+      <div class="panel">
+        <div class="stat-grid">
+          <div class="stat"><b id="aStatOrders">০</b><span>মোট অর্ডার</span></div>
+          <div class="stat"><b id="aStatNew">০</b><span>নতুন</span></div>
+          <div class="stat"><b id="aStatSales">০</b><span>কনফার্মড বিক্রি</span></div>
+        </div>
+      </div>
+
+      <div class="tabs" style="margin-top:var(--space)">
+        <button class="tab active" data-tab="orders">অর্ডার</button>
+        <button class="tab" data-tab="products">প্রোডাক্ট</button>
+        <button class="tab" data-tab="settings">সেটিংস ও কাস্টমাইজ</button>
+      </div>
+
+      <div class="panel" id="tab-orders">
+        <div class="toolbar">
+          <select id="orderStatusFilter" aria-label="স্ট্যাটাস ফিল্টার">
+            <option value="all">সব স্ট্যাটাস</option>
+            <option value="pending">নতুন</option>
+            <option value="confirmed">নিশ্চিত</option>
+            <option value="packed">প্যাক হয়েছে</option>
+            <option value="shipped">পাঠানো হয়েছে</option>
+            <option value="delivered">ডেলিভারি হয়েছে</option>
+            <option value="cancelled">বাতিল</option>
+          </select>
+          <button class="btn btn-ghost" id="btnOrdersRefresh">রিফ্রেশ</button>
+          <button class="btn btn-ghost" id="btnExportCsv">CSV এক্সপোর্ট</button>
+          <span class="note" id="ordersUpdated"></span>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>অর্ডার আইডি</th><th>তারিখ</th><th>কাস্টমার</th><th>ফোন</th>
+                <th>আইটেম</th><th>মোট</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="noOrders" hidden>এখনো কোনো অর্ডার আসেনি।</div>
+      </div>
+
+      <div class="panel" id="tab-products" hidden>
+        <h3 id="prodFormTitle">নতুন প্রোডাক্ট যোগ করুন</h3>
+        <div class="settings-grid">
+          <div class="field"><label for="pName">প্রোডাক্টের নাম *</label><input id="pName" placeholder="যেমন: কর্ডলেস ড্রিল মেশিন"></div>
+          <div class="field"><label for="pCat">ক্যাটাগরি</label><input id="pCat" placeholder="পাওয়ার টুল" list="catList"><datalist id="catList"></datalist></div>
+          <div class="field"><label for="pPrice">দাম *</label><input id="pPrice" type="number" min="0" step="1" placeholder="4500"></div>
+          <div class="field"><label for="pStock">স্টক</label><input id="pStock" type="number" min="0" step="1" placeholder="10"></div>
+          <div class="field"><label for="pUnit">ইউনিট</label><input id="pUnit" placeholder="পিস / সেট / বক্স"></div>
+          <div class="field"><label for="pImage">ছবির URL (অপশনাল)</label><input id="pImage" placeholder="https://…"></div>
+        </div>
+        <div class="field"><label for="pDesc">বিবরণ</label><textarea id="pDesc" rows="2" placeholder="সংক্ষিপ্ত বিবরণ"></textarea></div>
+        <div class="toolbar" style="margin:0">
+          <button class="btn btn-primary" id="btnSaveProduct">সেভ করুন</button>
+          <button class="btn btn-ghost" id="btnResetProduct" hidden>এডিট বাতিল</button>
+          <span class="note" id="prodHint"></span>
+        </div>
+
+        <div class="tablewrap" style="margin-top:var(--space)">
+          <table>
+            <thead><tr><th>আইডি</th><th>নাম</th><th>ক্যাটাগরি</th><th>দাম</th><th>স্টক</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr></thead>
+            <tbody id="productsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-settings" hidden>
+        <h3>সার্ভার কানেকশন</h3>
+        <div class="field"><label for="sApi">Google Apps Script Web App URL</label><input id="sApi" placeholder="https://script.google.com/macros/s/…/exec"></div>
+        <div class="settings-grid">
+          <div class="field"><label for="sKey">অ্যাডমিন কী / পাসওয়ার্ড</label><input id="sKey" type="text"></div>
+          <div class="field"><label for="sSheet">Google Sheet আইডি (তথ্যের জন্য)</label><input id="sSheet" placeholder="1AbC…"></div>
+        </div>
+        <div class="toolbar" style="margin:0">
+          <button class="btn btn-primary" id="btnTestConn">কানেকশন টেস্ট</button>
+          <span class="note" id="connStatus"></span>
+        </div>
+
+        <h3 style="margin-top:var(--space)">দোকানের পরিচয় ও লেখা</h3>
+        <div class="settings-grid">
+          <div class="field"><label for="sName">দোকানের নাম</label><input id="sName"></div>
+          <div class="field"><label for="sTag">ট্যাগলাইন</label><input id="sTag"></div>
+          <div class="field"><label for="sHero">হিরো শিরোনাম</label><input id="sHero"></div>
+          <div class="field"><label for="sSub">হিরো সাব-টেক্সট</label><input id="sSub"></div>
+          <div class="field"><label for="sCurrency">মুদ্রা চিহ্ন</label><input id="sCurrency"></div>
+          <div class="field"><label for="sPhone">ফোন / হোয়াটসঅ্যাপ</label><input id="sPhone" placeholder="+8801XXXXXXXXX"></div>
+          <div class="field"><label for="sAddress">ঠিকানা / ফুটার লেখা</label><input id="sAddress"></div>
+        </div>
+
+        <h3 style="margin-top:var(--space)">রঙ (ব্র্যান্ড কাস্টমাইজ)</h3>
+        <div class="settings-grid">
+          <div class="field"><label for="sBrand">প্রাইমারি রঙ</label><input id="sBrand" type="color"></div>
+          <div class="field"><label for="sAccent">অ্যাকসেন্ট রঙ</label><input id="sAccent" type="color"></div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn btn-primary" id="btnSaveSettings">সেটিংস সেভ করুন</button>
+          <button class="btn btn-ghost" id="btnExportJson">ব্যাকআপ (JSON)</button>
+          <button class="btn btn-ghost" id="btnImportJson">ব্যাকআপ রিস্টোর</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+          <button class="btn btn-danger" id="btnResetAll">সব রিসেট</button>
+        </div>
+
+        <details>
+          <summary>Google Sheet-এর সাথে কানেক্ট করার ধাপ</summary>
+          <ol class="steps">
+            <li>একটা Google Sheet খুলুন → <b>Extensions → Apps Script</b>।</li>
+            <li>সাথে দেওয়া <code>Code.gs</code> ফাইলের পুরো কোড পেস্ট করে সেভ করুন। উপরে <code>ADMIN_KEY</code> বদলে নিজের পাসওয়ার্ড দিন।</li>
+            <li><b>Deploy → New deployment → Web app</b>। Execute as: <b>Me</b>, Who has access: <b>Anyone</b>।</li>
+            <li>যে <code>…/exec</code> URL পাবেন সেটা উপরের ঘরে বসিয়ে <b>সেটিংস সেভ করুন</b>।</li>
+            <li>শিটে <code>Products</code>, <code>Orders</code>, <code>Settings</code> তিনটা ট্যাব নিজে থেকেই তৈরি হবে।</li>
+          </ol>
+          <p class="note">কোড আপডেট করলে আবার <b>Deploy → Manage deployments → Edit → New version</b> করতে হবে।</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span id="footText">টুল ভান্ডার — যন্ত্রপাতির দোকান</span>
+    <span id="footContact"></span>
+  </div>
+</footer>
+
+<div class="drawer-overlay" id="overlay"></div>
+<aside class="drawer" id="cartDrawer" aria-label="কার্ট">
+  <div class="drawer-head">
+    <h3>আপনার কার্ট</h3>
+    <button class="btn btn-ghost btn-sm" id="btnCloseCart" style="margin-left:auto">বন্ধ</button>
+  </div>
+  <div class="drawer-body">
+    <div id="cartItems"></div>
+    <div class="empty" id="cartEmpty">কার্ট খালি। প্রোডাক্ট কার্ড থেকে যোগ করুন।</div>
+
+    <div id="checkoutWrap" style="margin-top:var(--space)">
+      <h4>অর্ডার কনফার্ম করতে তথ্য দিন</h4>
+      <div class="field"><label for="cName">নাম *</label><input id="cName" autocomplete="name"></div>
+      <div class="field"><label for="cPhone">মোবাইল নম্বর *</label><input id="cPhone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
+      <div class="field"><label for="cAddress">ডেলিভারি ঠিকানা *</label><textarea id="cAddress" rows="2"></textarea></div>
+      <div class="field"><label for="cNote">নোট (অপশনাল)</label><textarea id="cNote" rows="2" placeholder="ডেলিভারির সময়, বিশেষ নির্দেশনা…"></textarea></div>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <div class="totals"><span>মোট</span><span id="cartTotal">৳০</span></div>
+    <button class="btn btn-primary" id="btnPlaceOrder" style="width:100%;justify-content:center">অর্ডার প্লেস করুন</button>
+    <p class="note" style="margin:.6rem 0 0">অর্ডার করার পর অ্যাডমিন প্যানেলে স্ট্যাটাস <b>নতুন</b> হিসেবে দেখা যাবে।</p>
+  </div>
+</aside>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DEFAULT_SETTINGS = {
+    apiUrl: "",
+    adminKey: "admin123",
+    sheetId: "",
+    shopName: "টুল ভান্ডার",
+    tagline: "যন্ত্রপাতি, সোজা দামে",
+    heroTitle: "যে যন্ত্রটা দরকার, সেটাই পাবেন এখানে",
+    heroSub: "হাতিয়ার, পাওয়ার টুল আর মাপার যন্ত্র — দাম দেখে অর্ডার করুন, আমরা ফোনে কনফার্ম করে ডেলিভারি দেব।",
+    currency: "৳",
+    phone: "",
+    address: "ঢাকা, বাংলাদেশ",
+    brand: "#22384a",
+    accent: "#d9600b"
+  };
+
+  var STATUS = {
+    pending:{bn:"নতুন"},
+    confirmed:{bn:"নিশ্চিত"},
+    packed:{bn:"প্যাক হয়েছে"},
+    shipped:{bn:"পাঠানো হয়েছে"},
+    delivered:{bn:"ডেলিভারি হয়েছে"},
+    cancelled:{bn:"বাতিল"}
+  };
+
+  var SEED = [
+    {name:"ক্ল অথর হাতুড়ি", category:"হাতিয়ার", price:550, stock:24, unit:"পিস", description:"কাঠ আর মেটালের কাজে টেকসই হাতুড়ি।"},
+    {name:"স্ক্রু ড্রাইভার সেট (১২ পিস)", category:"হাতিয়ার", price:950, stock:15, unit:"সেট", description:"ফ্ল্যাট, ফিলিপস আর টর্ক ড্রাইভার একসাথে।"},
+    {name:"মেজারিং টেপ ৫ মিটার", category:"মাপার যন্ত্র", price:250, stock:40, unit:"পিস", description:"লকিং ক্লিপ সহ স্টিল টেপ।"},
+    {name:"কর্ডলেস ড্রিল মেশিন", category:"পাওয়ার টুল", price:4500, stock:8, unit:"পিস", description:"১৮V ব্যাটারি, ভেরিয়েবল স্পিড।"},
+    {name:"অ্যাডজাস্টেবল রেঞ্চ", category:"হাতিয়ার", price:720, stock:18, unit:"পিস", description:"৮ ইঞ্চি, ক্রোম ভ্যানেডিয়াম স্টিল।"},
+    {name:"অ্যাঙ্গেল গ্রাইন্ডার", category:"পাওয়ার টুল", price:3800, stock:6, unit:"পিস", description:"কাটা ও ঘষার জন্য ৭৫০W মেশিন।"},
+    {name:"কম্বিনেশন প্লায়ার", category:"হাতিয়ার", price:480, stock:30, unit:"পিস", description:"ইনসুলেটেড গ্রিপ, তার ধরার জন্য।"},
+    {name:"স্পিরিট লেভেল", category:"মাপার যন্ত্র", price:650, stock:12, unit:"পিস", description:"অ্যালুমিনিয়াম বডি, তিন ভায়াল।"},
+    {name:"ওয়েল্ডিং মেশিন", category:"ওয়েল্ডিং", price:12500, stock:3, unit:"পিস", description:"ইনভার্টার টাইপ, ২০০A।"},
+    {name:"টুল বক্স ২৪ ইঞ্চি", category:"স্টোরেজ", price:2100, stock:9, unit:"পিস", description:"মেটাল টুল বক্স, লক সহ।"}
+  ];
+
+  var LS = { P:"tv_products", O:"tv_orders", S:"tv_settings", SEQ:"tv_seq" };
+
+  var state = {
+    settings: null,
+    products: [],
+    orders: [],
+    cart: [],
+    isAdmin: false,
+    tab: "orders",
+    query: "",
+    category: "all",
+    statusFilter: "all",
+    editingId: null
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){
+    return String(s === undefined || s === null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function money(n){
+    var v = Number(n) || 0;
+    return state.settings.currency + v.toLocaleString("en-US");
+  }
+  function num(n){
+    var d = ["০","১","২","৩","৪","৫","৬","৭","৮","৯"];
+    return String(n === undefined || n === null ? 0 : n).replace(/[0-9]/g, function(m){ return d[Number(m)]; });
+  }
+  function toast(msg, kind){
+    var t = document.createElement("div");
+    t.className = "toast" + (kind ? " " + kind : "");
+    t.textContent = msg;
+    $("toastStack").appendChild(t);
+    setTimeout(function(){ t.style.opacity = "0"; t.style.transition = "opacity .3s"; }, 2600);
+    setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 3000);
+  }
+  function readJson(key, fallback){
+    try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+    catch (e) { return fallback; }
+  }
+  function writeJson(key, val){
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* ignore */ }
+  }
+  function newId(prefix, list){
+    var max = 0;
+    (list || []).forEach(function(it){
+      var m = String(it.id || "").match(/(\d+)$/);
+      if (m) { max = Math.max(max, Number(m[1])); }
+    });
+    return prefix + String(max + 1).padStart(4, "0");
+  }
+  function today(){
+    var d = new Date();
+    var p = function(x){ return String(x).padStart(2, "0"); };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+  function nowStamp(){
+    var d = new Date();
+    var p = function(x){ return String(x).padStart(2, "0"); };
+    return today() + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  /* ---------------- settings ---------------- */
+  function loadSettings(){
+    var saved = readJson(LS.S, {});
+    var s = {};
+    Object.keys(DEFAULT_SETTINGS).forEach(function(k){ s[k] = DEFAULT_SETTINGS[k]; });
+    Object.keys(saved || {}).forEach(function(k){ if (saved[k] !== undefined && saved[k] !== null) s[k] = saved[k]; });
+    return s;
+  }
+  function saveSettingsLocal(){
+    writeJson(LS.S, state.settings);
+  }
+  function applyTheme(){
+    var s = state.settings;
+    var root = document.documentElement;
+    root.style.setProperty("--steel", s.brand);
+    root.style.setProperty("--accent", s.accent);
+    root.style.setProperty("--accent-ink", shade(s.accent, -0.42));
+    root.style.setProperty("--accent-soft", tint(s.accent, 0.86));
+    $("brandName").textContent = s.shopName;
+    $("brandMark").textContent = (s.shopName || "ট").trim().charAt(0);
+    $("brandTag").textContent = s.tagline;
+    $("heroTitle").innerHTML = esc(s.heroTitle);
+    $("heroSub").textContent = s.heroSub;
+    $("footText").textContent = s.shopName + (s.address ? " — " + s.address : "");
+    $("footContact").textContent = s.phone ? "অর্ডার / যোগাযোগ: " + s.phone : "";
+    document.title = s.shopName + " — অর্ডার ও অ্যাডমিন প্যানেল";
+    var online = !!s.apiUrl;
+    $("modeNote").textContent = online ? "ডেটা সোর্স: Google Sheet (লাইভ)" : "ডেটা সোর্স: ডেমো (এই ব্রাউজারে)";
+    $("demoBanner").hidden = online;
+  }
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function hexToRgb(h){
+    var m = String(h || "").trim().replace("#", "");
+    if (m.length === 3) { m = m[0] + m[0] + m[1] + m[1] + m[2] + m[2]; }
+    if (!/^[0-9a-fA-F]{6}$/.test(m)) { return { r:34, g:56, b:74 }; }
+    return { r:parseInt(m.slice(0,2),16), g:parseInt(m.slice(2,4),16), b:parseInt(m.slice(4,6),16) };
+  }
+  function rgbToHex(c){
+    var f = function(v){ var s = Math.round(clamp01(v) * 255).toString(16); return s.length === 1 ? "0" + s : s; };
+    return "#" + f(c.r) + f(c.g) + f(c.b);
+  }
+  function shade(hex, amt){
+    var c = hexToRgb(hex);
+    var t = amt < 0 ? 0 : 1;
+    var p = Math.abs(amt);
+    return rgbToHex({
+      r:(c.r / 255) + (t - (c.r / 255)) * p,
+      g:(c.g / 255) + (t - (c.g / 255)) * p,
+      b:(c.b / 255) + (t - (c.b / 255)) * p
+    });
+  }
+  function tint(hex, amt){
+    var c = hexToRgb(hex);
+    var f = function(v){ return (v / 255) + (1 - (v / 255)) * amt; };
+    return "rgba(" + Math.round(f(c.r) * 255) + "," + Math.round(f(c.g) * 255) + "," + Math.round(f(c.b) * 255) + ",1)";
+  }
+
+  /* ---------------- api layer ---------------- */
+  function api(action, payload){
+    var s = state.settings;
+    var body = {};
+    Object.keys(payload || {}).forEach(function(k){ body[k] = payload[k]; });
+    body.action = action;
+    body.key = s.adminKey;
+
+    if (!s.apiUrl) { return demoApi(action, body); }
+
+    return fetch(s.apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(body),
+      redirect: "follow"
+    }).then(function(res){
+      if (!res.ok) { throw new Error("সার্ভার রেসপন্স " + res.status); }
+      return res.json();
+    }).then(function(data){
+      if (data && data.ok === false) { throw new Error(data.error || "সার্ভার ত্রুটি"); }
+      return data;
+    });
+  }
+
+  function demoApi(action, body){
+    return new Promise(function(resolve, reject){
+      setTimeout(function(){
+        try {
+          if (action === "listProducts") { return resolve({ ok:true, products: state.products, demo:true }); }
+          if (action === "placeOrder") {
+            var seq = Number(localStorage.getItem(LS.SEQ) || "0") + 1;
+            localStorage.setItem(LS.SEQ, String(seq));
+            var order = {
+              orderId: "ORD-" + today().replace(/-/g,"") + "-" + String(seq).padStart(4, "0"),
+              createdAt: nowStamp(),
+              customer: body.customer,
+              phone: body.phone,
+              address: body.address,
+              note: body.note || "",
+              items: body.items,
+              total: body.total,
+              status: "pending",
+              updatedAt: nowStamp()
+            };
+            state.orders.unshift(order);
+            writeJson(LS.O, state.orders);
+            state.products.forEach(function(p){
+              (body.items || []).forEach(function(it){
+                if (it.id === p.id) { p.stock = Math.max(0, Number(p.stock || 0) - Number(it.qty || 0)); }
+              });
+            });
+            writeJson(LS.P, state.products);
+            return resolve({ ok:true, order: order, demo:true });
+          }
+          if (body.key !== state.settings.adminKey) { return resolve({ ok:false, error:"ভুল পাসওয়ার্ড" }); }
+          if (action === "listOrders") { return resolve({ ok:true, orders: state.orders, demo:true }); }
+          if (action === "updateStatus") {
+            state.orders.forEach(function(o){ if (o.orderId === body.orderId) { o.status = body.status; o.updatedAt = nowStamp(); } });
+            writeJson(LS.O, state.orders);
+            return resolve({ ok:true, demo:true });
+          }
+          if (action === "deleteOrder") {
+            state.orders = state.orders.filter(function(o){ return o.orderId !== body.orderId; });
+            writeJson(LS.O, state.orders);
+            return resolve({ ok:true, demo:true });
+          }
+          if (action === "saveProduct") {
+            var p = body.product || {};
+            if (p.id) {
+              state.products = state.products.map(function(x){ return x.id === p.id ? Object.assign({}, x, p) : x; });
+            } else {
+              p.id = newId("PT-", state.products);
+              p.active = true;
+              p.createdAt = nowStamp();
+              state.products.push(p);
+            }
+            writeJson(LS.P, state.products);
+            return resolve({ ok:true, product: p, demo:true });
+          }
+          if (action === "deleteProduct") {
+            state.products = state.products.filter(function(x){ return x.id !== body.id; });
+            writeJson(LS.P, state.products);
+            return resolve({ ok:true, demo:true });
+          }
+          if (action === "saveSettings") {
+            var merged = Object.assign({}, state.settings, body.settings || {});
+            state.settings = merged;
+            saveSettingsLocal();
+            return resolve({ ok:true, demo:true });
+          }
+          if (action === "trackOrder") {
+            var found = state.orders.filter(function(o){ return o.orderId === body.orderId; })[0];
+            return resolve({ ok:true, order: found || null, demo:true });
+          }
+          if (action === "ping") { return resolve({ ok:true, message:"ডেমো মোড চালু আছে", demo:true }); }
+          return resolve({ ok:false, error:"অজানা অ্যাকশন: " + action });
+        } catch (e) { reject(e); }
+      }, 130);
+    });
+  }
+
+  /* ---------------- shop ---------------- */
+  function refreshProducts(){
+    return api("listProducts").then(function(res){
+      state.products = (res.products || []).map(function(p){
+        return {
+          id: p.id, name: p.name, category: p.category || "অন্যান্য",
+          price: Number(p.price) || 0, stock: Number(p.stock) || 0,
+          unit: p.unit || "পিস", description: p.description || "",
+          imageUrl: p.imageUrl || "", active: p.active !== false, createdAt: p.createdAt || ""
+        };
+      }).filter(function(p){ return p.active; });
+      renderCategories();
+      renderProducts();
+      renderStats();
+    }).catch(function(err){ toast("প্রোডাক্ট লোড হয়নি: " + err.message, "err"); });
+  }
+
+  function renderCategories(){
+    var cats = [];
+    state.products.forEach(function(p){ if (cats.indexOf(p.category) === -1) { cats.push(p.category); } });
+    var sel = $("catFilter");
+    var cur = state.category;
+    sel.innerHTML = '<option value="all">সব ক্যাটাগরি</option>' + cats.map(function(c){
+      return '<option value="' + esc(c) + '">' + esc(c) + "</option>";
+    }).join("");
+    sel.value = cats.indexOf(cur) === -1 ? "all" : cur;
+    $("catList").innerHTML = cats.map(function(c){ return '<option value="' + esc(c) + '"></option>'; }).join("");
+  }
+
+  function renderStats(){
+    $("statProducts").textContent = num(state.products.length);
+    $("statOrders").textContent = num(state.orders.length);
+    $("statNew").textContent = num(state.orders.filter(function(o){ return o.status === "pending"; }).length);
+    $("cartCount").textContent = num(state.cart.reduce(function(a, c){ return a + c.qty; }, 0));
+  }
+
+  function renderProducts(){
+    var q = state.query.trim().toLowerCase();
+    var list = state.products.filter(function(p){
+      var okCat = state.category === "all" || p.category === state.category;
+      var okQ = !q || (p.name + " " + p.category + " " + p.description).toLowerCase().indexOf(q) !== -1;
+      return okCat && okQ;
+    });
+    $("noProducts").hidden = list.length > 0;
+    $("productGrid").innerHTML = list.map(function(p){
+      var low = p.stock > 0 && p.stock <= 5;
+      var thumb = p.imageUrl
+        ? '<img src="' + esc(p.imageUrl) + '" alt="' + esc(p.name) + '" loading="lazy">'
+        : '<span class="glyph">' + esc((p.name || "?").trim().charAt(0)) + "</span>";
+      return '<article class="card">' +
+        '<div class="thumb">' + thumb +
+          '<span class="pn">' + esc(p.id) + "</span>" +
+          (p.stock <= 0 ? '<span class="soldout">স্টক শেষ</span>' : "") +
+        "</div>" +
+        '<div class="card-body">' +
+          '<h3 class="pname">' + esc(p.name) + "</h3>" +
+          '<p class="pmeta">' + esc(p.category) + " · " + esc(p.unit) + "</p>" +
+          (p.description ? '<p class="pdesc">' + esc(p.description) + "</p>" : "") +
+          '<div class="prow"><span class="price">' + money(p.price) + "</span>" +
+          '<span class="stock' + (low ? " low" : "") + '">স্টক: ' + num(p.stock) + "</span></div>" +
+          '<button class="btn btn-accent btn-add" data-id="' + esc(p.id) + '"' + (p.stock <= 0 ? " disabled" : "") + ">" +
+            (p.stock <= 0 ? "স্টক নেই" : "কার্টে যোগ করুন") + "</button>" +
+        "</div></article>";
+    }).join("");
+  }
+
+  function addToCart(id){
+    var p = state.products.filter(function(x){ return x.id === id; })[0];
+    if (!p) { return; }
+    var line = state.cart.filter(function(c){ return c.id === id; })[0];
+    if (line) {
+      if (line.qty >= p.stock) { toast("স্টকে আর নেই", "err"); return; }
+      line.qty += 1;
+    } else {
+      state.cart.push({ id:p.id, name:p.name, price:p.price, qty:1, unit:p.unit });
+    }
+    renderCart();
+    toast(p.name + " কার্টে যোগ হয়েছে", "ok");
+  }
+
+  function renderCart(){
+    $("cartEmpty").hidden = state.cart.length > 0;
+    $("checkoutWrap").hidden = state.cart.length === 0;
+    $("cartItems").innerHTML = state.cart.map(function(c){
+      return '<div class="line-item">' +
+        '<div style="flex:1"><div class="li-name">' + esc(c.name) + "</div>" +
+        '<div class="note">' + money(c.price) + " × " + num(c.qty) + " = <b>" + money(c.price * c.qty) + "</b></div>" +
+        '<div class="qty"><button data-dec="' + esc(c.id) + '" aria-label="কমান">−</button><b>' + num(c.qty) + '</b>' +
+        '<button data-inc="' + esc(c.id) + '" aria-label="বাড়ান">+</button>' +
+        '<button class="btn btn-danger btn-sm" data-rm="' + esc(c.id) + '" style="margin-left:auto">সরান</button></div></div>' +
+      "</div>";
+    }).join("");
+    var total = state.cart.reduce(function(a, c){ return a + c.price * c.qty; }, 0);
+    $("cartTotal").textContent = money(total);
+    renderStats();
+  }
+
+  function openCart(){ $("cartDrawer").classList.add("open"); $("overlay").classList.add("open"); }
+  function closeCart(){ $("cartDrawer").classList.remove("open"); $("overlay").classList.remove("open"); }
+
+  function placeOrder(){
+    if (!state.cart.length) { toast("কার্ট খালি", "err"); return; }
+    var name = $("cName").value.trim();
+    var phone = $("cPhone").value.trim();
+    var address = $("cAddress").value.trim();
+    if (!name) { toast("নাম দিন", "err"); $("cName").focus(); return; }
+    if (!/^[0-9+\-() ]{6,}$/.test(phone)) { toast("সঠিক মোবাইল নম্বর দিন", "err"); $("cPhone").focus(); return; }
+    if (!address) { toast("ডেলিভারি ঠিকানা দিন", "err"); $("cAddress").focus(); return; }
+
+    var total = state.cart.reduce(function(a, c){ return a + c.price * c.qty; }, 0);
+    var payload = {
+      customer: name, phone: phone, address: address, note: $("cNote").value.trim(),
+      items: state.cart.map(function(c){ return { id:c.id, name:c.name, price:c.price, qty:c.qty }; }),
+      total: total
+    };
+    var btn = $("btnPlaceOrder");
+    btn.disabled = true; btn.textContent = "পাঠানো হচ্ছে…";
+
+    api("placeOrder", payload).then(function(res){
+      var o = res.order || {};
+      if (!state.orders.some(function(x){ return x.orderId === o.orderId; })) { state.orders.unshift(o); }
+      state.cart = [];
+      renderCart();
+      ["cName","cPhone","cAddress","cNote"].forEach(function(k){ $(k).value = ""; });
+      closeCart();
+      var wa = state.settings.phone ? state.settings.phone.replace(/[^0-9]/g, "") : "";
+      var msg = "অর্ডার হয়েছে! আইডি: " + o.orderId + "। মোট " + money(o.total) + "। আমরা শীঘ্রই ফোন করে কনফার্ম করব।";
+      $("trackResult").innerHTML = '<div class="banner" style="border-left-color:var(--ok)"><span>✅</span><div><b>' +
+        esc(o.orderId) + "</b> — অর্ডার জমা হয়েছে। মোট " + money(o.total) +
+        (wa ? ' <a href="https://wa.me/' + esc(wa) + '" target="_blank" rel="noopener">হোয়াটসঅ্যাপে জানান</a>' : "") + "</div></div>";
+      $("trackPanel").hidden = false;
+      toast(msg, "ok");
+      refreshProducts();
+      if (state.isAdmin) { refreshOrders(); }
+    }).catch(function(err){
+      toast("অর্ডার পাঠানো গেল না: " + err.message, "err");
+    }).then(function(){
+      btn.disabled = false; btn.textContent = "অর্ডার প্লেস করুন";
+    });
+  }
+
+  /* ---------------- admin ---------------- */
+  function refreshOrders(){
+    return api("listOrders").then(function(res){
+      state.orders = res.orders || [];
+      renderOrders();
+      renderAdminStats();
+      $("ordersUpdated").textContent = "সর্বশেষ আপডেট: " + nowStamp();
+    }).catch(function(err){ toast("অর্ডার লোড হয়নি: " + err.message, "err"); });
+  }
+
+  function renderAdminStats(){
+    var confirmed = state.orders.filter(function(o){ return o.status !== "cancelled"; });
+    var sales = confirmed.reduce(function(a, o){ return a + (Number(o.total) || 0); }, 0);
+    $("aStatOrders").textContent = num(state.orders.length);
+    $("aStatNew").textContent = num(state.orders.filter(function(o){ return o.status === "pending"; }).length);
+    $("aStatSales").textContent = money(sales);
+    renderStats();
+  }
+
+  function itemsText(items){
+    return (items || []).map(function(it){ return it.name + " × " + it.qty; }).join(", ");
+  }
+
+  function renderOrders(){
+    var list = state.orders.filter(function(o){
+      return state.statusFilter === "all" || o.status === state.statusFilter;
+    });
+    $("noOrders").hidden = list.length > 0;
+    $("ordersBody").innerHTML = list.map(function(o){
+      var opts = Object.keys(STATUS).map(function(k){
+        return '<option value="' + k + '"' + (o.status === k ? " selected" : "") + ">" + STATUS[k].bn + "</option>";
+      }).join("");
+      return "<tr>" +
+        "<td><b>" + esc(o.orderId) + "</b></td>" +
+        "<td>" + esc(o.createdAt) + "</td>" +
+        "<td>" + esc(o.customer) + "<div class=\"note\">" + esc(o.address) + "</div></td>" +
+        '<td><a href="tel:' + esc(o.phone) + '">' + esc(o.phone) + "</a></td>" +
+        "<td>" + esc(itemsText(o.items)) + "</td>" +
+        "<td><b>" + money(o.total) + "</b></td>" +
+        '<td><span class="pill st-' + esc(o.status) + '">' + (STATUS[o.status] ? STATUS[o.status].bn : esc(o.status)) + "</span>" +
+          '<select data-status="' + esc(o.orderId) + '" style="margin-top:.35rem;min-width:8.5rem">' + opts + "</select></td>" +
+        '<td><button class="btn btn-danger btn-sm" data-del="' + esc(o.orderId) + '">ডিলিট</button></td>' +
+      "</tr>";
+    }).join("");
+  }
+
+  function renderAdminProducts(){
+    $("productsBody").innerHTML = state.products.map(function(p){
+      return "<tr>" +
+        "<td>" + esc(p.id) + "</td><td>" + esc(p.name) + "</td><td>" + esc(p.category) + "</td>" +
+        "<td>" + money(p.price) + "</td><td>" + num(p.stock) + " " + esc(p.unit) + "</td>" +
+        '<td><span class="pill ' + (p.active ? "st-delivered" : "st-cancelled") + '">' + (p.active ? "চালু" : "বন্ধ") + "</span></td>" +
+        '<td><button class="btn btn-ghost btn-sm" data-edit="' + esc(p.id) + '">এডিট</button> ' +
+        '<button class="btn btn-ghost btn-sm" data-toggle="' + esc(p.id) + '">' + (p.active ? "বন্ধ করুন" : "চালু করুন") + "</button> " +
+        '<button class="btn btn-danger btn-sm" data-delp="' + esc(p.id) + '">ডিলিট</button></td>' +
+      "</tr>";
+    }).join("");
+  }
+
+  function fillProductForm(p){
+    state.editingId = p ? p.id : null;
+    $("pName").value = p ? p.name : "";
+    $("pCat").value = p ? p.category : "";
+    $("pPrice").value = p ? p.price : "";
+    $("pStock").value = p ? p.stock : "";
+    $("pUnit").value = p ? p.unit : "পিস";
+    $("pImage").value = p ? p.imageUrl : "";
+    $("pDesc").value = p ? p.description : "";
+    $("prodFormTitle").textContent = p ? "প্রোডাক্ট এডিট: " + p.id : "নতুন প্রোডাক্ট যোগ করুন";
+    $("btnResetProduct").hidden = !p;
+  }
+
+  function saveProduct(){
+    var name = $("pName").value.trim();
+    var price = Number($("pPrice").value);
+    if (!name) { toast("প্রোডাক্টের নাম দিন", "err"); return; }
+    if (!(price >= 0)) { toast("সঠিক দাম দিন", "err"); return; }
+    var product = {
+      id: state.editingId || "",
+      name: name,
+      category: $("pCat").value.trim() || "অন্যান্য",
+      price: price,
+      stock: Number($("pStock").value) || 0,
+      unit: $("pUnit").value.trim() || "পিস",
+      imageUrl: $("pImage").value.trim(),
+      description: $("pDesc").value.trim(),
+      active: true
+    };
+    api("saveProduct", { product: product }).then(function(){
+      toast(state.editingId ? "প্রোডাক্ট আপডেট হয়েছে" : "নতুন প্রোডাক্ট যোগ হয়েছে", "ok");
+      fillProductForm(null);
+      return refreshProducts();
+    }).then(function(){
+      renderAdminProducts();
+    }).catch(function(err){ toast("সেভ হয়নি: " + err.message, "err"); });
+  }
+
+  function toggleProduct(id){
+    var p = state.products.filter(function(x){ return x.id === id; })[0];
+    if (!p) { return; }
+    api("saveProduct", { product: { id:p.id, active: !p.active } }).then(function(){
+      return refreshProducts();
+    }).then(function(){
+      renderAdminProducts();
+      toast("স্ট্যাটাস বদলেছে", "ok");
+    }).catch(function(err){ toast("পারিনি: " + err.message, "err"); });
+  }
+
+  function deleteProduct(id){
+    if (!confirm("এই প্রোডাক্টটা ডিলিট করবেন?")) { return; }
+    api("deleteProduct", { id: id }).then(function(){
+      return refreshProducts();
+    }).then(function(){ renderAdminProducts(); toast("ডিলিট হয়েছে", "ok"); })
+      .catch(function(err){ toast("ডিলিট হয়নি: " + err.message, "err"); });
+  }
+
+  function exportCsv(){
+    if (!state.orders.length) { toast("এক্সপোর্ট করার অর্ডার নেই", "err"); return; }
+    var head = ["orderId","createdAt","customer","phone","address","items","total","status","note"];
+    var rows = state.orders.map(function(o){
+      return head.map(function(k){
+        var v = k === "items" ? itemsText(o.items) : (o[k] === undefined ? "" : o[k]);
+        return '"' + String(v).replace(/"/g, '""') + '"';
+      }).join(",");
+    });
+    var csv = "\ufeff" + head.join(",") + "\n" + rows.join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "orders-" + today() + ".csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function exportJson(){
+    var data = { settings: state.settings, products: state.products, orders: state.orders, exportedAt: nowStamp() };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "tool-shop-backup-" + today() + ".json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importJson(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var data = JSON.parse(reader.result);
+        if (data.products) { writeJson(LS.P, data.products); state.products = data.products; }
+        if (data.orders) { writeJson(LS.O, data.orders); state.orders = data.orders; }
+        if (data.settings) {
+          state.settings = Object.assign({}, state.settings, data.settings);
+          saveSettingsLocal();
+          applyTheme();
+          fillSettingsForm();
+        }
+        renderProducts(); renderAdminProducts(); renderOrders(); renderAdminStats();
+        toast("ব্যাকআপ রিস্টোর হয়েছে", "ok");
+      } catch (e) { toast("ফাইলটা পড়া গেল না", "err"); }
+    };
+    reader.readAsText(file);
+  }
+
+  /* ---------------- settings form ---------------- */
+  function fillSettingsForm(){
+    var s = state.settings;
+    $("sApi").value = s.apiUrl; $("sKey").value = s.adminKey; $("sSheet").value = s.sheetId || "";
+    $("sName").value = s.shopName; $("sTag").value = s.tagline;
+    $("sHero").value = s.heroTitle; $("sSub").value = s.heroSub;
+    $("sCurrency").value = s.currency; $("sPhone").value = s.phone; $("sAddress").value = s.address;
+    $("sBrand").value = s.brand; $("sAccent").value = s.accent;
+  }
+
+  function collectSettingsForm(){
+    return {
+      apiUrl: $("sApi").value.trim(),
+      adminKey: $("sKey").value.trim() || "admin123",
+      sheetId: $("sSheet").value.trim(),
+      shopName: $("sName").value.trim() || "টুল ভান্ডার",
+      tagline: $("sTag").value.trim(),
+      heroTitle: $("sHero").value.trim(),
+      heroSub: $("sSub").value.trim(),
+      currency: $("sCurrency").value.trim() || "৳",
+      phone: $("sPhone").value.trim(),
+      address: $("sAddress").value.trim(),
+      brand: $("sBrand").value,
+      accent: $("sAccent").value
+    };
+  }
+
+  function saveSettings(){
+    var next = collectSettingsForm();
+    state.settings = Object.assign({}, state.settings, next);
+    saveSettingsLocal();
+    applyTheme();
+    renderProducts(); renderCart(); renderOrders();
+    var remote = Object.assign({}, next);
+    delete remote.apiUrl; delete remote.adminKey;
+    if (state.settings.apiUrl) {
+      api("saveSettings", { settings: remote }).then(function(){
+        toast("সেটিংস শিটে সেভ হয়েছে", "ok");
+      }).catch(function(err){ toast("শিটে সেভ হয়নি (লোকালে আছে): " + err.message, "err"); });
+    } else {
+      toast("সেটিংস সেভ হয়েছে", "ok");
+    }
+  }
+
+  function testConnection(){
+    var url = $("sApi").value.trim();
+    if (!url) { $("connStatus").textContent = "আগে URL বসান।"; return; }
+    $("connStatus").textContent = "টেস্ট চলছে…";
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "ping", key: $("sKey").value.trim() }),
+      redirect: "follow"
+    }).then(function(r){ return r.json(); }).then(function(d){
+      $("connStatus").textContent = d && d.ok ? "✅ কানেকশন ঠিক আছে" : "⚠️ " + ((d && d.error) || "অজানা সমস্যা");
+    }).catch(function(err){
+      $("connStatus").textContent = "❌ কানেক্ট হয়নি: " + err.message + " (Deployment access যেন Anyone থাকে)";
+    });
+  }
+
+  /* ---------------- events ---------------- */
+  function bindEvents(){
+    $("btnCart").addEventListener("click", openCart);
+    $("btnCloseCart").addEventListener("click", closeCart);
+    $("overlay").addEventListener("click", closeCart);
+    $("btnTrack").addEventListener("click", function(){ $("trackPanel").hidden = !$("trackPanel").hidden; });
+
+    $("btnTrackGo").addEventListener("click", function(){
+      var id = $("trackId").value.trim();
+      if (!id) { return; }
+      api("trackOrder", { orderId: id }).then(function(res){
+        var o = res.order;
+        $("trackResult").innerHTML = o
+          ? '<div class="banner" style="border-left-color:var(--accent)"><span>📦</span><div><b>' + esc(o.orderId) + "</b> — স্ট্যাটাস: <b>" +
+            (STATUS[o.status] ? STATUS[o.status].bn : esc(o.status)) + "</b><br>মোট: " + money(o.total) + " · আইটেম: " + esc(itemsText(o.items)) + "</div></div>"
+          : '<div class="banner"><span>🔍</span><div>এই আইডিতে কোনো অর্ডার পাওয়া গেল না।</div></div>';
+      }).catch(function(err){ toast("খুঁজে পাওয়া গেল না: " + err.message, "err"); });
+    });
+
+    $("searchBox").addEventListener("input", function(e){ state.query = e.target.value; renderProducts(); });
+    $("catFilter").addEventListener("change", function(e){ state.category = e.target.value; renderProducts(); });
+    $("btnRefresh").addEventListener("click", function(){ refreshProducts().then(function(){ toast("রিফ্রেশ হয়েছে", "ok"); }); });
+
+    $("productGrid").addEventListener("click", function(e){
+      var b = e.target.closest("[data-id]");
+      if (b) { addToCart(b.getAttribute("data-id")); }
+    });
+
+    $("cartItems").addEventListener("click", function(e){
+      var t = e.target;
+      var inc = t.getAttribute("data-inc"), dec = t.getAttribute("data-dec"), rm = t.getAttribute("data-rm");
+      if (inc) { addToCart(inc); }
+      if (dec) {
+        state.cart = state.cart.map(function(c){ return c.id === dec ? { id:c.id, name:c.name, price:c.price, qty:c.qty - 1, unit:c.unit } : c; })
+          .filter(function(c){ return c.qty > 0; });
+        renderCart();
+      }
+      if (rm) { state.cart = state.cart.filter(function(c){ return c.id !== rm; }); renderCart(); }
+    });
+
+    $("btnPlaceOrder").addEventListener("click", placeOrder);
+
+    $("btnAdmin").addEventListener("click", function(){
+      var admin = $("view-admin");
+      admin.hidden = !admin.hidden;
+      $("view-shop").hidden = !admin.hidden;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (!admin.hidden && state.isAdmin) { refreshOrders(); }
+    });
+
+    $("btnLogin").addEventListener("click", function(){
+      var pass = $("adminPass").value;
+      if (pass === state.settings.adminKey) {
+        state.isAdmin = true;
+        $("loginGate").hidden = true;
+        $("adminPanel").hidden = false;
+        $("adminPass").value = "";
+        refreshOrders().then(function(){ refreshProducts(); });
+        toast("স্বাগতম, অ্যাডমিন", "ok");
+      } else {
+        toast("পাসওয়ার্ড মিলল না", "err");
+      }
+    });
+    $("adminPass").addEventListener("keydown", function(e){ if (e.key === "Enter") { $("btnLogin").click(); } });
+
+    document.querySelectorAll(".tab").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.tab = btn.getAttribute("data-tab");
+        document.querySelectorAll(".tab").forEach(function(b){ b.classList.toggle("active", b === btn); });
+        ["orders","products","settings"].forEach(function(t){ $("tab-" + t).hidden = t !== state.tab; });
+      });
+    });
+
+    $("orderStatusFilter").addEventListener("change", function(e){ state.statusFilter = e.target.value; renderOrders(); });
+    $("btnOrdersRefresh").addEventListener("click", function(){ refreshOrders().then(function(){ toast("অর্ডার রিফ্রেশ হয়েছে", "ok"); }); });
+    $("btnExportCsv").addEventListener("click", exportCsv);
+
+    $("ordersBody").addEventListener("change", function(e){
+      var sel = e.target.closest("[data-status]");
+      if (!sel) { return; }
+      var id = sel.getAttribute("data-status");
+      api("updateStatus", { orderId: id, status: sel.value }).then(function(){
+        state.orders.forEach(function(o){ if (o.orderId === id) { o.status = sel.value; o.updatedAt = nowStamp(); } });
+        renderOrders(); renderAdminStats();
+        toast(id + " → " + STATUS[sel.value].bn, "ok");
+      }).catch(function(err){ toast("স্ট্যাটাস বদলায়নি: " + err.message, "err"); });
+    });
+
+    $("ordersBody").addEventListener("click", function(e){
+      var del = e.target.closest("[data-del]");
+      if (!del) { return; }
+      var id = del.getAttribute("data-del");
+      if (!confirm(id + " অর্ডারটা ডিলিট করবেন?")) { return; }
+      api("deleteOrder", { orderId: id }).then(function(){
+        state.orders = state.orders.filter(function(o){ return o.orderId !== id; });
+        renderOrders(); renderAdminStats();
+        toast("অর্ডার ডিলিট হয়েছে", "ok");
+      }).catch(function(err){ toast("ডিলিট হয়নি: " + err.message, "err"); });
+    });
+
+    $("btnSaveProduct").addEventListener("click", saveProduct);
+    $("btnResetProduct").addEventListener("click", function(){ fillProductForm(null); });
+
+    $("productsBody").addEventListener("click", function(e){
+      var ed = e.target.closest("[data-edit]"), tg = e.target.closest("[data-toggle]"), dp = e.target.closest("[data-delp]");
+      if (ed) {
+        var p = state.products.filter(function(x){ return x.id === ed.getAttribute("data-edit"); })[0];
+        if (p) { fillProductForm(p); window.scrollTo({ top: $("tab-products").offsetTop - 90, behavior: "smooth" }); }
+      }
+      if (tg) { toggleProduct(tg.getAttribute("data-toggle")); }
+      if (dp) { deleteProduct(dp.getAttribute("data-delp")); }
+    });
+
+    $("btnSaveSettings").addEventListener("click", saveSettings);
+    $("btnTestConn").addEventListener("click", testConnection);
+    $("btnExportJson").addEventListener("click", exportJson);
+    $("btnImportJson").addEventListener("click", function(){ $("importFile").click(); });
+    $("importFile").addEventListener("change", function(e){ if (e.target.files[0]) { importJson(e.target.files[0]); } });
+    $("btnResetAll").addEventListener("click", function(){
+      if (!confirm("সব ডেটা মুছে ডিফল্টে ফিরে যাবেন?")) { return; }
+      [LS.P, LS.O, LS.S, LS.SEQ].forEach(function(k){ localStorage.removeItem(k); });
+      state.settings = loadSettings();
+      state.products = [];
+      state.orders = [];
+      state.cart = [];
+      seedIfEmpty();
+      applyTheme(); fillSettingsForm(); renderProducts(); renderCart(); renderAdminProducts(); renderOrders(); renderAdminStats();
+      toast("রিসেট হয়েছে", "ok");
+    });
+  }
+
+  function seedIfEmpty(){
+    var stored = readJson(LS.P, null);
+    if (!stored || !stored.length) {
+      state.products = SEED.map(function(p, i){
+        return {
+          id: "PT-" + String(i + 1).padStart(4, "0"), name:p.name, category:p.category, price:p.price,
+          stock:p.stock, unit:p.unit, description:p.description, imageUrl:"", active:true, createdAt: nowStamp()
+        };
+      });
+      writeJson(LS.P, state.products);
+    } else {
+      state.products = stored;
+    }
+    var orders = readJson(LS.O, null);
+    if (!orders) { writeJson(LS.O, []); }
+  }
+
+  function init(){
+    state.settings = loadSettings();
+    seedIfEmpty();
+    applyTheme();
+    bindEvents();
+    fillSettingsForm();
+    renderCart();
+    renderAdminProducts();
+    refreshProducts();
+    if (state.settings.apiUrl) {
+      api("listOrders").then(function(res){
+        state.orders = res.orders || [];
+        renderStats(); renderAdminStats();
+      }).catch(function(){ /* login লাগবে, চুপচাপ থাকি */ });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
